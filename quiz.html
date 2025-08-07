@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Électricité</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .option-card {
+            transition: all 0.3s ease;
+        }
+        .option-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        .correct-answer {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+        .wrong-answer {
+            background-color: #fee2e2;
+            border-color: #ef4444;
+        }
+        .loading-spinner {
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 pb-16">
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span class="font-semibold" id="quiz-title">Quiz Électricité</span>
+            </div>
+            <div class="text-sm">
+                <span id="current-score">Score: 0</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Quiz Container -->
+    <div class="container mx-auto px-4 py-8 max-w-2xl">
+        <!-- Loading State -->
+        <div id="loading-state" class="text-center py-12">
+            <div class="inline-block loading-spinner text-blue-500 text-4xl mb-4">
+                <i class="fas fa-spinner"></i>
+            </div>
+            <p class="text-gray-600">Chargement des questions...</p>
+        </div>
+
+        <!-- Quiz Content (hidden initially) -->
+        <div id="quiz-content" class="hidden">
+            <!-- Progress Bar -->
+            <div class="mb-6">
+                <div class="flex justify-between mb-1">
+                    <span class="text-sm font-medium">Progression</span>
+                    <span id="progress-text" class="text-sm font-medium">0/0</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                    <div id="progress-bar" class="progress-bar h-2.5 rounded-full bg-blue-600" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="bg-white rounded-xl shadow-md p-6">
+                <h2 id="question-text" class="text-xl font-semibold text-gray-800 mb-6"></h2>
+                
+                <!-- Options Container -->
+                <div id="options-container" class="space-y-3 mb-6"></div>
+                
+                <!-- Feedback -->
+                <div id="feedback" class="hidden mb-4 p-3 rounded-lg"></div>
+                
+                <!-- Navigation -->
+                <div class="flex justify-between border-t pt-4">
+                    <button id="prev-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition disabled:opacity-50" disabled>
+                        <i class="fas fa-arrow-left mr-2"></i>Précédent
+                    </button>
+                    <button id="next-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50" disabled>
+                        Suivant<i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="error-state" class="hidden text-center py-12">
+            <div class="text-red-500 text-4xl mb-4">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Erreur de chargement</h3>
+            <p class="text-gray-600 mb-4" id="error-message"></p>
+            <button id="retry-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                <i class="fas fa-sync-alt mr-2"></i>Réessayer
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navbar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+        <div class="flex justify-around">
+            <a href="index.html" class="flex flex-col items-center py-3 px-6 text-gray-500 hover:text-blue-600">
+                <i class="fas fa-book-open mb-1"></i>
+                <span>Révision</span>
+            </a>
+            <a href="quiz.html" class="flex flex-col items-center py-3 px-6 text-blue-600 font-medium">
+                <i class="fas fa-question-circle mb-1"></i>
+                <span>Quiz</span>
+            </a>
+        </div>
+    </nav>
+
+    <script>
+        // État du quiz
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let userAnswers = [];
+        let quizData = {};
+
+        // Éléments DOM
+        const loadingState = document.getElementById('loading-state');
+        const quizContent = document.getElementById('quiz-content');
+        const errorState = document.getElementById('error-state');
+        const errorMessage = document.getElementById('error-message');
+        const retryBtn = document.getElementById('retry-btn');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackDiv = document.getElementById('feedback');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const scoreDisplay = document.getElementById('current-score');
+        const quizTitle = document.getElementById('quiz-title');
+
+        // Charger les données du quiz
+        async function loadQuizData() {
+            try {
+                showLoadingState();
+                
+                const response = await fetch('quiz-data.json');
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                quizData = await response.json();
+                
+                // Validation des données
+                if (!quizData.questions || !Array.isArray(quizData.questions) || quizData.questions.length === 0) {
+                    throw new Error("Le format des questions est invalide");
+                }
+                
+                questions = quizData.questions;
+                userAnswers = new Array(questions.length).fill(null);
+                
+                quizTitle.textContent = quizData.titre || "Quiz Électricité";
+                hideErrorState();
+                initQuiz();
+                
+            } catch (error) {
+                console.error("Erreur de chargement:", error);
+                showErrorState(`Impossible de charger le quiz: ${error.message}`);
+            }
+        }
+
+        // États d'interface
+        function showLoadingState() {
+            loadingState.classList.remove('hidden');
+            quizContent.classList.add('hidden');
+            errorState.classList.add('hidden');
+        }
+
+        function showQuizContent() {
+            loadingState.classList.add('hidden');
+            quizContent.classList.remove('hidden');
+            errorState.classList.add('hidden');
+        }
+
+        function showErrorState(message) {
+            loadingState.classList.add('hidden');
+            quizContent.classList.add('hidden');
+            errorState.classList.remove('hidden');
+            errorMessage.textContent = message;
+        }
+
+        function hideErrorState() {
+            errorState.classList.add('hidden');
+        }
+
+        // Initialiser le quiz
+        function initQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            updateScore();
+            displayQuestion();
+            showQuizContent();
+        }
+
+        // Afficher la question actuelle
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            
+            questionText.textContent = question.question;
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionCard = document.createElement('div');
+                optionCard.className = `option-card p-3 rounded-lg border-2 cursor-pointer ${
+                    userAnswers[currentQuestionIndex] === index 
+                        ? userAnswers[currentQuestionIndex] === question.correctAnswer 
+                            ? 'correct-answer' 
+                            : 'wrong-answer'
+                        : 'border-gray-200 hover:border-blue-300'
+                }`;
+                optionCard.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
+                            userAnswers[currentQuestionIndex] === index 
+                                ? 'bg-blue-500 text-white'
+                                : 'bg-gray-200'
+                        }">
+                            ${String.fromCharCode(65 + index)}
+                        </div>
+                        <div>${option}</div>
+                    </div>
+                `;
+                
+                optionCard.addEventListener('click', () => selectAnswer(index));
+                optionsContainer.appendChild(optionCard);
+            });
+            
+            // Gestion du feedback
+            if (userAnswers[currentQuestionIndex] !== null) {
+                showFeedback();
+            } else {
+                feedbackDiv.classList.add('hidden');
+            }
+            
+            // Mise à jour des boutons
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
+            
+            // Mise à jour de la progression
+            updateProgress();
+        }
+
+        // Sélectionner une réponse
+        function selectAnswer(answerIndex) {
+            if (userAnswers[currentQuestionIndex] !== null) return;
+            
+            const question = questions[currentQuestionIndex];
+            userAnswers[currentQuestionIndex] = answerIndex;
+            
+            if (answerIndex === question.correctAnswer) {
+                score++;
+                updateScore();
+            }
+            
+            displayQuestion();
+            showFeedback();
+            nextBtn.disabled = false;
+        }
+
+        // Afficher le feedback
+        function showFeedback() {
+            const question = questions[currentQuestionIndex];
+            const userAnswer = userAnswers[currentQuestionIndex];
+            
+            feedbackDiv.classList.remove('hidden');
+            
+            if (userAnswer === question.correctAnswer) {
+                feedbackDiv.className = 'bg-green-100 text-green-700 p-3 rounded-lg mb-4';
+                feedbackDiv.innerHTML = `<i class="fas fa-check-circle mr-2"></i>Correct! ${question.explication}`;
+            } else {
+                feedbackDiv.className = 'bg-red-100 text-red-700 p-3 rounded-lg mb-4';
+                feedbackDiv.innerHTML = `
+                    <i class="fas fa-times-circle mr-2"></i>Incorrect. 
+                    <p class="mt-1">La bonne réponse était: <strong>${question.options[question.correctAnswer]}</strong></p>
+                    <p class="mt-1">${question.explication}</p>
+                `;
+            }
+        }
+
+        // Mettre à jour la progression
+        function updateProgress() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${currentQuestionIndex + 1}/${questions.length}`;
+        }
+
+        // Mettre à jour le score
+        function updateScore() {
+            scoreDisplay.textContent = `Score: ${score}/${questions.length}`;
+        }
+
+        // Navigation
+        nextBtn.addEventListener('click', () => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                // Fin du quiz - Sauvegarde des résultats et redirection
+                saveResults();
+                submitResults();
+                window.location.href = "feedback.html";
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        });
+
+        // Sauvegarder les résultats dans localStorage
+        function saveResults() {
+            const results = {
+                score: score,
+                total: questions.length,
+                date: new Date().toISOString(),
+                answers: userAnswers.map((answer, index) => ({
+                    question: questions[index].question,
+                    userAnswer: questions[index].options[answer],
+                    correctAnswer: questions[index].options[questions[index].correctAnswer],
+                    isCorrect: answer === questions[index].correctAnswer
+                }))
+            };
+            localStorage.setItem('quizResults', JSON.stringify(results));
+        }
+
+        // Envoyer les résultats via FormSubmit
+        function submitResults() {
+            const form = document.createElement('form');
+            form.action = 'https://formsubmit.co/ajax/' + encodeURIComponent(quizData.email_reception);
+            form.method = 'POST';
+            form.style.display = 'none';
+
+            const results = JSON.parse(localStorage.getItem('quizResults'));
+            const percentage = Math.round((results.score / results.total) * 100);
+
+            const message = `Résultats du Quiz - ${quizData.titre}\n\n`
+                + `Score: ${results.score}/${results.total} (${percentage}%)\n`
+                + `Date: ${new Date(results.date).toLocaleString()}\n\n`
+                + `Détail des réponses:\n`
+                + results.answers.map((a, i) => 
+                    `\nQ${i+1}: ${a.question}\n`
+                    + `Réponse donnée: ${a.userAnswer || 'Non répondue'}\n`
+                    + `Réponse correcte: ${a.correctAnswer}\n`
+                    + `${a.isCorrect ? '✅ Correct' : '❌ Incorrect'}\n`
+                ).join('\n');
+
+            const formData = new FormData();
+            formData.append('_subject', `Résultats Quiz - ${quizData.titre}`);
+            formData.append('message', message);
+            formData.append('_cc', quizData.email_reception);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            }).catch(error => console.error('Erreur envoi:', error));
+        }
+
+        // Réessayer le chargement
+        retryBtn.addEventListener('click', loadQuizData);
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', loadQuizData);
+    </script>
+</body>
+</html>
