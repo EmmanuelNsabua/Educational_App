@@ -3,649 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Électricité - Évaluation</title>
+    <title>Révisions Électricité</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .card {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            min-height: 250px;
         }
-        .pulse-hover:hover {
-            animation: pulse 1.5s infinite;
+        .card.flipped {
+            transform: rotateY(180deg);
         }
-        .option-card {
-            transition: all 0.3s ease;
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
         }
-        .option-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        .card-front {
+            background: white;
         }
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
+        .card-back {
+            background: #f0f9ff;
+            transform: rotateY(180deg);
         }
-        .counter-animation {
-            animation: bounce 0.5s;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
+        .flip-btn {
+            margin-top: auto;
+            align-self: flex-end;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Authentication Card -->
-        <div id="auth-card" class="bg-white rounded-xl shadow-xl p-8 max-w-md mx-auto animate__animated animate__fadeIn">
-            <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Identifiez-vous</h2>
-            <form id="auth-form">
-                <div class="mb-4">
-                    <label for="user-name" class="block text-gray-700 mb-2">Votre nom complet</label>
-                    <input type="text" id="user-name" required 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <div class="mb-6">
-                    <label for="user-email" class="block text-gray-700 mb-2">Votre email</label>
-                    <input type="email" id="user-email" required
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                </div>
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition pulse-hover">
-                    Commencer le Quiz
-                </button>
-            </form>
-        </div>
+<body class="bg-gray-50 pb-16">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-600 mb-2">Révisions d'Électricité</h1>
+            <p class="text-gray-600">Appuyez sur "Retourner" pour voir les réponses</p>
+        </header>
 
-        <!-- Quiz Container (Hidden Initially) -->
-        <div id="quiz-container" class="hidden bg-white rounded-xl shadow-xl overflow-hidden">
-            <!-- Header -->
-            <header class="text-center mb-6 pt-6 px-6">
-                <h1 class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-600 mb-2">
-                    Quiz d'Électricité
-                </h1>
-                <p class="text-gray-600 mb-4">Élève: <span id="student-name" class="font-semibold"></span></p>
-                <div class="flex justify-center mb-2">
-                    <div class="w-full max-w-md bg-white rounded-full h-3 shadow-inner">
-                        <div id="progress-bar" class="progress-bar h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div id="progress-text" class="text-sm text-gray-500 font-medium">
-                    <span id="completed-counter" class="counter-text">0</span>/20 complétés
-                </div>
-            </header>
-
-            <!-- Question Card -->
-            <div id="question-card" class="p-6">
-                <div class="flex justify-between items-start mb-6">
-                    <span id="question-number" class="px-4 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">Question 1</span>
-                    <span id="score-display" class="px-4 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold">Score: 0</span>
-                </div>
-                
-                <h2 id="question-text" class="text-xl font-semibold text-gray-800 mb-6">
-                    Chargement de la question...
-                </h2>
-                
-                <!-- Options Grid -->
-                <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                    <!-- Options will be inserted here by JavaScript -->
-                </div>
-                
-                <!-- Navigation Buttons -->
-                <div class="flex justify-between border-t pt-6">
-                    <button id="prev-btn" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg font-medium hover:bg-gray-300 transition disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                        ← Précédent
-                    </button>
-                    <button id="next-btn" class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition pulse-hover">
-                        Suivant →
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Results Card (Hidden Initially) -->
-        <div id="results-card" class="hidden bg-white rounded-xl shadow-xl overflow-hidden p-8 text-center animate__animated animate__zoomIn">
-            <div class="mb-6">
-                <div class="w-24 h-24 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center mx-auto shadow-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                </div>
-            </div>
-            <h2 class="text-3xl font-bold text-gray-800 mb-2">Quiz Terminé!</h2>
-            <p class="text-xl text-gray-600 mb-1">Résultats pour <span id="result-name" class="font-semibold"></span></p>
-            <p id="final-score" class="text-xl text-gray-600 mb-4">Score: <span class="font-bold">0</span>/20</p>
-            <div class="mb-6">
-                <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div id="final-progress" class="h-3 rounded-full bg-gradient-to-r from-green-400 to-blue-500" style="width: 0%"></div>
-                </div>
-            </div>
-            <p id="result-message" class="text-lg mb-6"></p>
-            <div id="send-success" class="hidden mb-4 p-3 bg-green-100 text-green-700 rounded-lg">
-                Résultats envoyés avec succès!
-            </div>
-            <div id="send-error" class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg">
-                Erreur d'envoi. Veuillez vérifier votre connexion Internet.
-            </div>
-            <button id="restart-btn" class="px-6 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition pulse-hover mr-2">
-                Recommencer
-            </button>
+        <div id="revision-container" class="flex flex-col gap-6">
+            <!-- Les cartes seront générées par JavaScript -->
         </div>
     </div>
 
+    <!-- Bottom Navbar -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200">
+        <div class="flex justify-around">
+            <a href="index.html" class="flex flex-col items-center py-3 px-6 text-blue-600 font-medium">
+                <i class="fas fa-book-open mb-1"></i>
+                <span>Révision</span>
+            </a>
+            <a href="quiz.html" class="flex flex-col items-center py-3 px-6 text-gray-500 hover:text-blue-600">
+                <i class="fas fa-question-circle mb-1"></i>
+                <span>Quiz</span>
+            </a>
+        </div>
+    </nav>
+
+    
     <script>
-        // Quiz Questions (Focused on Fundamental Concepts Only)
-        const quizQuestions = [
-            {
-                question: "Quelle est l'unité de la charge électrique dans le système international?",
-                options: [
-                    "Ampère (A)",
-                    "Volt (V)",
-                    "Coulomb (C)",
-                    "Ohm (Ω)"
-                ],
-                correctAnswer: 2,
-                explanation: "La charge électrique se mesure en coulombs (C) dans le système international."
-            },
-            {
-                question: "Quelle particule subatomique porte une charge électrique négative?",
-                options: [
-                    "Proton",
-                    "Neutron",
-                    "Électron",
-                    "Positron"
-                ],
-                correctAnswer: 2,
-                explanation: "L'électron porte une charge élémentaire négative de -1,602 × 10⁻¹⁹ C."
-            },
-            {
-                question: "Que stipule le principe de conservation de la charge électrique?",
-                options: [
-                    "La charge peut être créée mais pas détruite",
-                    "La charge totale d'un système isolé reste constante",
-                    "Les charges positives et négatives s'annulent toujours",
-                    "La charge dépend du matériau considéré"
-                ],
-                correctAnswer: 1,
-                explanation: "Le principe de conservation énonce que la charge totale d'un système isolé reste constante."
-            },
-            {
-                question: "Quel est le sens conventionnel du courant électrique?",
-                options: [
-                    "Du pôle négatif vers le pôle positif",
-                    "Du pôle positif vers le pôle négatif",
-                    "Des électrons vers les protons",
-                    "Du potentiel bas vers le potentiel haut"
-                ],
-                correctAnswer: 1,
-                explanation: "Par convention, le courant circule du + vers le -, bien que les électrons se déplacent en sens inverse."
-            },
-            {
-                question: "Si un fil transporte 3 coulombs en 2 secondes, quelle est l'intensité du courant?",
-                options: [
-                    "0.67 A",
-                    "1.5 A",
-                    "6 A",
-                    "1 A"
-                ],
-                correctAnswer: 1,
-                explanation: "I = Δq/Δt = 3 C / 2 s = 1,5 A."
-            },
-            {
-                question: "Qu'appelle-t-on 'porteurs de charge' dans un métal?",
-                options: [
-                    "Les protons seulement",
-                    "Les électrons libres",
-                    "Les ions positifs",
-                    "Les neutrons"
-                ],
-                correctAnswer: 1,
-                explanation: "Dans les métaux, les électrons libres sont les porteurs de charge mobiles."
-            },
-            {
-                question: "Quel instrument mesure la différence de potentiel entre deux points?",
-                options: [
-                    "Ampèremètre",
-                    "Voltmètre",
-                    "Ohmmètre",
-                    "Wattmètre"
-                ],
-                correctAnswer: 1,
-                explanation: "Le voltmètre mesure la tension (en volts) entre deux points."
-            },
-            {
-                question: "Quelle est la tension aux bornes d'une pile plate standard?",
-                options: [
-                    "1,5 V",
-                    "9 V",
-                    "220 V",
-                    "3,7 V"
-                ],
-                correctAnswer: 0,
-                explanation: "Une pile plate standard a une tension nominale de 1,5 volts."
-            },
-            {
-                question: "Quel matériau parmi ces propositions est un bon isolant électrique?",
-                options: [
-                    "Cuivre",
-                    "Argent",
-                    "Caoutchouc",
-                    "Aluminium"
-                ],
-                correctAnswer: 2,
-                explanation: "Le caoutchouc est un excellent isolant."
-            },
-            {
-                question: "Quelle propriété permet de classer les semi-conducteurs?",
-                options: [
-                    "Leur conductivité est toujours élevée",
-                    "Leur conductivité est toujours nulle",
-                    "Leur conductivité est intermédiaire et contrôlable",
-                    "Ils ne conduisent que les charges positives"
-                ],
-                correctAnswer: 2,
-                explanation: "Les semi-conducteurs ont une conductivité modifiable."
-            },
-            {
-                question: "Si la charge q(t) = 2t² + 3t (en C), quel est le courant à t = 2s?",
-                options: [
-                    "7 A",
-                    "11 A",
-                    "14 A",
-                    "22 A"
-                ],
-                correctAnswer: 1,
-                explanation: "I = dq/dt = 4t + 3. À t=2s, I = 11 A."
-            },
-            {
-                question: "Quelle affirmation sur la tension est FAUSSE?",
-                options: [
-                    "Se mesure entre deux points d'un circuit",
-                    "S'exprime en volts",
-                    "Est synonyme de courant électrique",
-                    "Représente une différence d'énergie potentielle"
-                ],
-                correctAnswer: 2,
-                explanation: "La tension n'est pas le courant. Le courant est le flux de charges."
-            },
-            {
-                question: "Dans un circuit, où place-t-on un voltmètre pour mesurer la tension aux bornes d'une lampe?",
-                options: [
-                    "En série avec la lampe",
-                    "En parallèle avec la lampe",
-                    "À l'entrée du circuit seulement",
-                    "En série avec le générateur"
-                ],
-                correctAnswer: 1,
-                explanation: "Le voltmètre se branche en parallèle avec l'élément à mesurer."
-            },
-            {
-                question: "Quelle est la charge élémentaire (valeur absolue) en coulombs?",
-                options: [
-                    "1 C",
-                    "1,602 × 10⁻¹⁹ C",
-                    "6,242 × 10¹⁸ C",
-                    "9,109 × 10⁻³¹ C"
-                ],
-                correctAnswer: 1,
-                explanation: "La charge élémentaire est de 1,602 × 10⁻¹⁹ C."
-            },
-            {
-                question: "Quel phénomène explique que l'ambre frottée attire des petits papiers?",
-                options: [
-                    "Le courant électrique",
-                    "L'électrisation par frottement",
-                    "La conduction ionique",
-                    "L'effet Joule"
-                ],
-                correctAnswer: 1,
-                explanation: "C'est l'électrisation par frottement qui crée une attraction électrostatique."
-            },
-            {
-                question: "Combien d'électrons représentent une charge de -1 C?",
-                options: [
-                    "1,602 × 10¹⁹",
-                    "6,242 × 10¹⁸",
-                    "1,602 × 10⁻¹⁹",
-                    "6,242 × 10⁻¹⁸"
-                ],
-                correctAnswer: 1,
-                explanation: "n = Q/e = 1 C / 1,602 × 10⁻¹⁹ C ≈ 6,242 × 10¹⁸ électrons."
-            },
-            {
-                question: "Quelle propriété NE définit PAS un bon conducteur?",
-                options: [
-                    "Beaucoup d'électrons libres",
-                    "Résistivité faible",
-                    "Bande interdite large",
-                    "Conductivité élevée"
-                ],
-                correctAnswer: 2,
-                explanation: "Les bons conducteurs ont une bande interdite très étroite."
-            },
-            {
-                question: "Si 5 × 10¹⁸ électrons traversent une section en 10 s, quel est le courant?",
-                options: [
-                    "0,08 A",
-                    "0,8 A",
-                    "8 A",
-                    "80 A"
-                ],
-                correctAnswer: 0,
-                explanation: "Q = ne = 5×10¹⁸ × 1,6×10⁻¹⁹ = 0,8 C. I = Q/t = 0,08 A."
-            },
-            {
-                question: "Quelle affirmation sur les isolants est VRAIE?",
-                options: [
-                    "Ils n'ont aucune charge électrique",
-                    "Ils ont des électrons totalement immobiles",
-                    "Leurs électrons sont fortement liés aux atomes",
-                    "Ils conduisent mieux que les semi-conducteurs"
-                ],
-                correctAnswer: 2,
-                explanation: "Les isolants ont des électrons fortement liés aux atomes."
+        // Fonction pour charger les données JSON
+        async function loadRevisionData() {
+            try {
+                const response = await fetch('revision-data.json');
+                if (!response.ok) throw new Error('Erreur de chargement');
+                return await response.json();
+            } catch (error) {
+                console.error("Erreur:", error);
+                // Retourne des données par défaut si échec
+                return [
+                    {
+                        question: "Erreur de chargement",
+                        answer: "Impossible de charger les données",
+                        details: ["Veuillez vérifier le fichier JSON"]
+                    }
+                ];
             }
-        ];
-
-        // Quiz State
-        let currentQuestion = 0;
-        let score = 0;
-        let userAnswers = Array(quizQuestions.length).fill(null);
-        let quizCompleted = false;
-        let completedCount = 0;
-        let studentName = "";
-        let studentEmail = "";
-
-        // DOM Elements
-        const authCard = document.getElementById('auth-card');
-        const authForm = document.getElementById('auth-form');
-        const quizContainer = document.getElementById('quiz-container');
-        const resultsCard = document.getElementById('results-card');
-        const studentNameDisplay = document.getElementById('student-name');
-        const resultNameDisplay = document.getElementById('result-name');
-        const questionNumber = document.getElementById('question-number');
-        const questionText = document.getElementById('question-text');
-        const optionsGrid = document.getElementById('options-grid');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const completedCounter = document.getElementById('completed-counter');
-        const scoreDisplay = document.getElementById('score-display');
-        const finalScore = document.getElementById('final-score');
-        const finalProgress = document.getElementById('final-progress');
-        const resultMessage = document.getElementById('result-message');
-        const restartBtn = document.getElementById('restart-btn');
-        const sendSuccess = document.getElementById('send-success');
-        const sendError = document.getElementById('send-error');
-
-        // Initialize Quiz
-        function initQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            completedCount = 0;
-            userAnswers = Array(quizQuestions.length).fill(null);
-            quizCompleted = false;
-            
-            studentNameDisplay.textContent = studentName;
-            
-            quizContainer.classList.remove('hidden');
-            authCard.classList.add('hidden');
-            resultsCard.classList.add('hidden');
-            
-            updateProgress();
-            displayQuestion();
         }
 
-        // Display Current Question
-        function displayQuestion() {
-            const question = quizQuestions[currentQuestion];
+        // Création des cartes avec les données chargées
+        async function createCards() {
+            const container = document.getElementById('revision-container');
+            const revisionData = await loadRevisionData();
             
-            questionNumber.textContent = `Question ${currentQuestion + 1}`;
-            questionText.textContent = question.question;
-            
-            optionsGrid.innerHTML = '';
-            
-            question.options.forEach((option, index) => {
-                const optionCard = document.createElement('div');
-                optionCard.className = `option-card p-3 rounded-lg border-2 cursor-pointer transition ${
-                    userAnswers[currentQuestion] === index 
-                        ? 'border-blue-500 bg-blue-50' 
-                        : 'border-gray-200 hover:border-blue-300 bg-gray-50'
-                }`;
-                optionCard.innerHTML = `
-                    <div class="flex items-center">
-                        <div class="w-6 h-6 rounded-full flex items-center justify-center mr-3 ${
-                            userAnswers[currentQuestion] === index 
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-gray-200'
-                        }">
-                            ${String.fromCharCode(65 + index)}
-                        </div>
-                        <div>${option}</div>
+            if (!revisionData || revisionData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-10 text-gray-500">
+                        <i class="fas fa-exclamation-triangle text-3xl mb-3"></i>
+                        <p>Aucune donnée de révision disponible</p>
                     </div>
                 `;
-                
-                optionCard.addEventListener('click', () => selectOption(index));
-                optionsGrid.appendChild(optionCard);
-            });
-            
-            prevBtn.disabled = currentQuestion === 0;
-            
-            if (currentQuestion === quizQuestions.length - 1) {
-                nextBtn.textContent = userAnswers[currentQuestion] !== null ? 'Terminer le quiz' : 'Terminer le quiz';
-            } else {
-                nextBtn.textContent = 'Suivant →';
+                return;
             }
             
-            scoreDisplay.textContent = `Score: ${score}`;
-        }
+            container.innerHTML = ''; // Vide le conteneur
+            
+            revisionData.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = 'card bg-white rounded-xl shadow-md relative';
+                card.innerHTML = `
+                    <div class="card-face card-front">
+                        <h3 class="text-xl font-bold text-blue-600 mb-4">Question ${index + 1}</h3>
+                        <p class="text-gray-700 mb-4 flex-grow">${item.question}</p>
+                        <button class="flip-btn px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition">
+                            <i class="fas fa-redo mr-2"></i>Retourner
+                        </button>
+                    </div>
+                    <div class="card-face card-back">
+                        <h3 class="text-xl font-bold text-blue-600 mb-4">Réponse</h3>
+                        <div class="flex-grow">
+                            <p class="text-green-600 font-bold mb-2">${item.answer}</p>
+                            <div class="text-gray-700 space-y-2">
+                                ${item.details.map(detail => `<p>• ${detail}</p>`).join('')}
+                            </div>
+                        </div>
+                        <button class="flip-btn px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition">
+                            <i class="fas fa-redo mr-2"></i>Retourner
+                        </button>
+                    </div>
+                `;
 
-        // Select Option
-        function selectOption(optionIndex) {
-            if (quizCompleted) return;
-            
-            const question = quizQuestions[currentQuestion];
-            const wasAlreadyAnswered = userAnswers[currentQuestion] !== null;
-            
-            userAnswers[currentQuestion] = optionIndex;
-            
-            if (!wasAlreadyAnswered) {
-                completedCount++;
-                updateCounter();
-            }
-            
-            displayQuestion();
-            updateProgress();
-        }
-
-        // Update counter with animation
-        function updateCounter() {
-            completedCounter.textContent = completedCount;
-            completedCounter.classList.add('counter-animation');
-            setTimeout(() => {
-                completedCounter.classList.remove('counter-animation');
-            }, 500);
-        }
-
-        // Navigate to Next Question
-        function nextQuestion() {
-            if (currentQuestion < quizQuestions.length - 1) {
-                currentQuestion++;
-                displayQuestion();
-            } else {
-                completeQuiz();
-            }
-        }
-
-        // Navigate to Previous Question
-        function prevQuestion() {
-            if (currentQuestion > 0) {
-                currentQuestion--;
-                displayQuestion();
-            }
-        }
-
-        // Complete Quiz
-        function completeQuiz() {
-            quizCompleted = true;
-            quizContainer.classList.add('hidden');
-            resultsCard.classList.remove('hidden');
-            
-            // Calculate final score
-            score = userAnswers.reduce((total, answer, index) => {
-                return answer === quizQuestions[index].correctAnswer ? total + 1 : total;
-            }, 0);
-            
-            // Display results
-            const percentage = Math.round((score / quizQuestions.length) * 100);
-            finalScore.textContent = `Score: ${score}/20`; // Corrigé pour afficher sur 20
-            finalProgress.style.width = `${percentage}%`;
-            resultNameDisplay.textContent = studentName;
-            
-            if (percentage >= 90) {
-                resultMessage.textContent = "Excellent! Vous maîtrisez parfaitement les notions fondamentales de l'électricité.";
-                resultMessage.className = "text-lg mb-6 text-green-600";
-            } else if (percentage >= 70) {
-                resultMessage.textContent = "Très bien! Vous avez une bonne compréhension des concepts de base.";
-                resultMessage.className = "text-lg mb-6 text-blue-600";
-            } else if (percentage >= 50) {
-                resultMessage.textContent = "Pas mal! Vous avez saisi les bases mais quelques révisions seraient bénéfiques.";
-                resultMessage.className = "text-lg mb-6 text-yellow-600";
-            } else {
-                resultMessage.textContent = "À revoir! Considérez réétudier les notions fondamentales avant de continuer.";
-                resultMessage.className = "text-lg mb-6 text-red-600";
-            }
-            
-            // Save results and send email
-            saveResults();
-            sendResultsEmail();
-            
-            if (percentage >= 70) {
-                addConfetti();
-            }
-        }
-
-        // Save results to localStorage
-        function saveResults() {
-            const quizResult = {
-                name: studentName,
-                email: studentEmail,
-                score: score,
-                total: quizQuestions.length,
-                date: new Date().toISOString(),
-                answers: userAnswers
-            };
-            
-            localStorage.setItem('lastQuizResult', JSON.stringify(quizResult));
-        }
-
-        // Send results via mailto
-        function sendResultsEmail() {
-            const emailBody = `
-                Résultats du quiz d'électricité:
-                Nom: ${studentName}
-                Email: ${studentEmail}
-                Score: ${score}/20 (${Math.round((score / quizQuestions.length) * 100)}%)
-                Date: ${new Date().toLocaleString()}
-                
-                Détail des réponses:
-                ${quizQuestions.map((q, i) => 
-                    `Q${i+1}: ${userAnswers[i] !== null ? q.options[userAnswers[i]] : 'Non répondue'} | ` +
-                    `${userAnswers[i] === q.correctAnswer ? 'Correct' : 'Incorrect'}\n`
-                ).join('')}
-            `;
-            
-            // Créer un formulaire caché pour envoyer l'email
-            const mailForm = document.createElement('form');
-            mailForm.action = 'mailto:ganakreen@gmail.com';
-            mailForm.method = 'POST';
-            mailForm.enctype = 'text/plain';
-            mailForm.style.display = 'none';
-            
-            const subjectInput = document.createElement('input');
-            subjectInput.type = 'hidden';
-            subjectInput.name = 'subject';
-            subjectInput.value = `Résultats Quiz - ${studentName}`;
-            mailForm.appendChild(subjectInput);
-            
-            const bodyInput = document.createElement('input');
-            bodyInput.type = 'hidden';
-            bodyInput.name = 'body';
-            bodyInput.value = emailBody;
-            mailForm.appendChild(bodyInput);
-            
-            document.body.appendChild(mailForm);
-            
-            try {
-                mailForm.submit();
-                sendSuccess.classList.remove('hidden');
-                sendError.classList.add('hidden');
-            } catch (e) {
-                sendSuccess.classList.add('hidden');
-                sendError.classList.remove('hidden');
-                console.error('Erreur envoi email:', e);
-            } finally {
-                setTimeout(() => {
-                    document.body.removeChild(mailForm);
-                }, 1000);
-            }
-        }
-
-        // Update Progress
-        function updateProgress() {
-            const progressPercentage = (completedCount / quizQuestions.length) * 100;
-            progressBar.style.width = `${progressPercentage}%`;
-            progressText.innerHTML = `<span id="completed-counter" class="counter-text">${completedCount}</span>/20 complétés`;
-        }
-
-        // Add Confetti Effect
-        function addConfetti() {
-            const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50'];
-            
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.style.position = 'fixed';
-                confetti.style.width = '8px';
-                confetti.style.height = '8px';
-                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                confetti.style.borderRadius = '50%';
-                confetti.style.left = `${Math.random() * 100}vw`;
-                confetti.style.top = '-10px';
-                confetti.style.opacity = '0.8';
-                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-                confetti.style.zIndex = '1000';
-                
-                document.body.appendChild(confetti);
-                
-                const animationDuration = Math.random() * 3 + 2;
-                
-                confetti.animate([
-                    { top: '-10px', opacity: 0.8 },
-                    { top: `${Math.random() * 100 + 50}vh`, opacity: 0 }
-                ], {
-                    duration: animationDuration * 1000,
-                    easing: 'cubic-bezier(0.1, 0.8, 0.9, 1)'
+                const flipBtns = card.querySelectorAll('.flip-btn');
+                flipBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        card.classList.toggle('flipped');
+                    });
                 });
-                
-                setTimeout(() => {
-                    confetti.remove();
-                }, animationDuration * 1000);
-            }
+
+                container.appendChild(card);
+            });
         }
 
-        // Event Listeners
-        authForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            studentName = document.getElementById('user-name').value;
-            studentEmail = document.getElementById('user-email').value;
-            initQuiz();
-        });
-        
-        nextBtn.addEventListener('click', nextQuestion);
-        prevBtn.addEventListener('click', prevQuestion);
-        restartBtn.addEventListener('click', () => {
-            resultsCard.classList.add('hidden');
-            authCard.classList.remove('hidden');
-        });
+        // Initialisation au chargement de la page
+        document.addEventListener('DOMContentLoaded', createCards);
     </script>
 </body>
 </html>
