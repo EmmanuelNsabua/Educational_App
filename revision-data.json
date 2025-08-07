@@ -1,0 +1,145 @@
+[
+  {
+    "question": "Qu'est-ce que l'optique géométrique ?",
+    "answer": "L'étude de la propagation de la lumière en ligne droite",
+    "details": [
+      "Modélise la lumière par des rayons",
+      "Utilise des lois de la réflexion et de la réfraction",
+      "S'applique aux miroirs et lentilles"
+    ]
+  },
+  {
+    "question": "Quels sont les trois types de milieux de propagation ?",
+    "answer": "Transparent, translucide et opaque",
+    "details": [
+      "Transparent : laisse passer la lumière (ex : air, verre clair)",
+      "Translucide : laisse passer partiellement (ex : verre dépoli)",
+      "Opaque : ne laisse pas passer la lumière (ex : bois, métal)"
+    ]
+  },
+  {
+    "question": "Qu'est-ce qu'un rayon lumineux ?",
+    "answer": "Une représentation directionnelle de la lumière",
+    "details": [
+      "Trajectoire en ligne droite",
+      "Permet de modéliser les phénomènes optiques",
+      "Utilisé dans les schémas de propagation"
+    ]
+  },
+  {
+    "question": "Qu'est-ce qu'un miroir plan ?",
+    "answer": "Surface réfléchissante plane",
+    "details": [
+      "Forme une image virtuelle, droite et symétrique",
+      "Distance objet-miroir = distance image-miroir",
+      "Angle d'incidence = angle de réflexion"
+    ]
+  },
+  {
+    "question": "Qu'est-ce qu'un miroir concave ?",
+    "answer": "Miroir sphérique creux dont la surface intérieure est réfléchissante",
+    "details": [
+      "Converge les rayons lumineux",
+      "Peut former image réelle ou virtuelle",
+      "Foyer réel devant le miroir"
+    ]
+  },
+  {
+    "question": "Qu'est-ce qu'un miroir convexe ?",
+    "answer": "Miroir sphérique bombé dont la surface extérieure est réfléchissante",
+    "details": [
+      "Diverge les rayons lumineux",
+      "Image toujours virtuelle, droite et réduite",
+      "Foyer virtuel derrière le miroir"
+    ]
+  },
+  {
+    "question": "Qu'est-ce que le foyer d’un miroir ?",
+    "answer": "Point de convergence ou de divergence des rayons réfléchis",
+    "details": [
+      "Foyer réel : miroir concave",
+      "Foyer virtuel : miroir convexe",
+      "Distance focale : f = R/2"
+    ]
+  },
+  {
+    "question": "Qu'est-ce que l’axe optique ?",
+    "answer": "Ligne imaginaire passant par le centre de courbure et le sommet du miroir",
+    "details": [
+      "Utilisé comme repère dans les tracés",
+      "Les rayons parallèles à cet axe passent par le foyer après réflexion"
+    ]
+  },
+  {
+    "question": "Comment tracer une image avec un miroir concave ?",
+    "answer": "En utilisant trois rayons principaux",
+    "details": [
+      "1. Rayon parallèle → passe par le foyer",
+      "2. Rayon passant par le foyer → devient parallèle",
+      "3. Rayon passant par le centre de courbure → se réfléchit sur lui-même"
+    ]
+  },
+  {
+    "question": "Quels sont les cas d'image pour un miroir concave ?",
+    "answer": "Selon la position de l'objet",
+    "details": [
+      "Au-delà du centre : réelle, inversée, réduite",
+      "Au centre : réelle, inversée, même taille",
+      "Entre centre et foyer : réelle, inversée, agrandie",
+      "Entre foyer et miroir : virtuelle, droite, agrandie"
+    ]
+  },
+  {
+    "question": "Comment est l'image dans un miroir convexe ?",
+    "answer": "Virtuelle, droite, plus petite",
+    "details": [
+      "Image toujours formée derrière le miroir",
+      "Utilisé pour augmenter le champ de vision",
+      "Aucun cas d’image réelle"
+    ]
+  },
+  {
+    "question": "Qu'est-ce qu'une ombre ?",
+    "answer": "Zone où la lumière est partiellement ou totalement bloquée",
+    "details": [
+      "Formée par un objet opaque",
+      "Deux parties : ombre propre et ombre portée",
+      "Peut contenir pénombre si source étendue"
+    ]
+  },
+  {
+    "question": "Quelle est la différence entre ombre propre et ombre portée ?",
+    "answer": "L'ombre propre est sur l'objet, l’ombre portée est sur une autre surface",
+    "details": [
+      "Ombre propre : partie non éclairée de l’objet",
+      "Ombre portée : projection sur une surface derrière l’objet",
+      "Observables en lumière directe"
+    ]
+  },
+  {
+    "question": "Qu'est-ce que la pénombre ?",
+    "answer": "Zone de lumière partielle",
+    "details": [
+      "Entre l’ombre totale et la lumière",
+      "Présente avec une source de lumière étendue",
+      "Plus la source est grande, plus la pénombre est large"
+    ]
+  },
+  {
+    "question": "Quelles sont les lois de la réflexion ?",
+    "answer": "Incidence = réflexion et rayon incident, réfléchi et normal dans un même plan",
+    "details": [
+      "Angle d'incidence = angle de réflexion",
+      "Normale : perpendiculaire à la surface au point d'incidence",
+      "Utilisé pour tracer les rayons réfléchis"
+    ]
+  },
+  {
+    "question": "Quels instruments utilisent l’optique géométrique ?",
+    "answer": "Miroirs, lentilles, périscopes, télescopes",
+    "details": [
+      "Permettent de diriger ou focaliser la lumière",
+      "Basés sur les lois de la réflexion et de la réfraction"
+    ]
+  }
+]
