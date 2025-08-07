@@ -1,0 +1,126 @@
+{
+  "titre": "Quiz d'Optique Géométrique",
+  "email_reception": "24mn261si@udbl.ac.cd",
+  "questions": [
+    {
+      "question": "Qu'est-ce qu'un rayon lumineux ?",
+      "options": ["Une onde sonore", "Une ligne droite représentant la direction de la lumière", "Une ombre", "Un courant électrique"],
+      "correctAnswer": 1,
+      "explication": "En optique géométrique, la lumière est représentée par des rayons lumineux, des lignes droites indiquant sa direction."
+    },
+    {
+      "question": "Quelle est la principale propriété des rayons lumineux dans un milieu homogène ?",
+      "options": ["Ils se courbent", "Ils changent de vitesse", "Ils se propagent en ligne droite", "Ils s’arrêtent"],
+      "correctAnswer": 2,
+      "explication": "Dans un milieu homogène, les rayons lumineux se propagent toujours en ligne droite."
+    },
+    {
+      "question": "Qu’est-ce qu’un objet opaque ?",
+      "options": ["Il laisse passer toute la lumière", "Il réfléchit toute la lumière", "Il absorbe et bloque la lumière", "Il diffuse la lumière"],
+      "correctAnswer": 2,
+      "explication": "Un objet opaque ne laisse pas passer la lumière, il crée donc des ombres."
+    },
+    {
+      "question": "Qu’est-ce qu’une ombre portée ?",
+      "options": ["Une lumière concentrée", "Une zone sans lumière derrière un objet opaque", "Un reflet", "Un faisceau laser"],
+      "correctAnswer": 1,
+      "explication": "L’ombre portée est la région sombre formée derrière un objet opaque éclairé."
+    },
+    {
+      "question": "Quelle partie de l’ombre contient une lumière partielle ?",
+      "options": ["L’ombre propre", "L’ombre portée", "La pénombre", "Le foyer"],
+      "correctAnswer": 2,
+      "explication": "La pénombre est la zone où la lumière est partiellement bloquée, entre l’ombre totale et la lumière."
+    },
+    {
+      "question": "Dans un miroir plan, comment est l’image obtenue ?",
+      "options": ["Inversée et réelle", "Inversée et virtuelle", "Droite et réelle", "Droite et virtuelle"],
+      "correctAnswer": 3,
+      "explication": "L’image d’un miroir plan est droite, symétrique par rapport au miroir, et virtuelle."
+    },
+    {
+      "question": "Qu’est-ce qu’un miroir concave ?",
+      "options": ["Un miroir plat", "Un miroir qui dévie la lumière vers l’extérieur", "Un miroir sphérique dont la face intérieure est réfléchissante", "Un miroir cylindrique"],
+      "correctAnswer": 2,
+      "explication": "Le miroir concave est une surface sphérique réfléchissante tournée vers l’intérieur."
+    },
+    {
+      "question": "Dans un miroir concave, où convergent les rayons parallèles à l’axe optique ?",
+      "options": ["Vers le sommet", "Vers le centre", "Vers le foyer", "Ils divergent"],
+      "correctAnswer": 2,
+      "explication": "Les rayons parallèles à l’axe optique convergent au foyer du miroir concave."
+    },
+    {
+      "question": "Qu’est-ce que le foyer d’un miroir concave ?",
+      "options": ["Le sommet du miroir", "Le point où les rayons divergents se rejoignent", "Le point où les rayons parallèles convergent après réflexion", "Un point imaginaire"],
+      "correctAnswer": 2,
+      "explication": "Le foyer est le point où les rayons parallèles à l’axe optique se croisent après réflexion dans un miroir concave."
+    },
+    {
+      "question": "Comment est l’image d’un objet placé entre le foyer et un miroir concave ?",
+      "options": ["Réelle et inversée", "Virtuelle et droite", "Inexistante", "Réelle et droite"],
+      "correctAnswer": 1,
+      "explication": "Lorsque l’objet est entre le miroir et le foyer, l’image est virtuelle, droite et agrandie."
+    },
+    {
+      "question": "Qu’est-ce qu’un miroir convexe ?",
+      "options": ["Un miroir qui grossit les images", "Un miroir sphérique dont la face extérieure est réfléchissante", "Un miroir plat", "Un miroir en entonnoir"],
+      "correctAnswer": 1,
+      "explication": "Le miroir convexe est une surface sphérique réfléchissante tournée vers l’extérieur."
+    },
+    {
+      "question": "Dans un miroir convexe, comment sont les images ?",
+      "options": ["Réelles et droites", "Virtuelles, droites et plus petites", "Réelles et inversées", "Inversées et agrandies"],
+      "correctAnswer": 1,
+      "explication": "Le miroir convexe donne toujours des images virtuelles, droites et réduites."
+    },
+    {
+      "question": "Quelle est la particularité du foyer d’un miroir convexe ?",
+      "options": ["C’est un point réel", "Il n’existe pas", "C’est un point virtuel derrière le miroir", "Il change selon la distance de l’objet"],
+      "correctAnswer": 2,
+      "explication": "Le foyer d’un miroir convexe est virtuel, situé derrière le miroir car les rayons divergent."
+    },
+    {
+      "question": "Quelle est la trajectoire d’un rayon passant par le centre de courbure d’un miroir sphérique ?",
+      "options": ["Il est réfléchi selon un angle de 90°", "Il suit l’axe optique", "Il est réfléchi sur lui-même", "Il est absorbé"],
+      "correctAnswer": 2,
+      "explication": "Un rayon passant par le centre de courbure revient sur lui-même après réflexion."
+    },
+    {
+      "question": "Comment nomme-t-on la distance entre le sommet du miroir et le foyer ?",
+      "options": ["La courbure", "La hauteur", "La distance focale", "La tangente"],
+      "correctAnswer": 2,
+      "explication": "La distance entre le sommet du miroir et le foyer est appelée la distance focale."
+    },
+    {
+      "question": "Pourquoi une ombre nette est-elle formée par une source ponctuelle ?",
+      "options": ["La lumière se diffuse", "La lumière contourne l’objet", "Tous les rayons sont bloqués directement", "Elle est trop faible"],
+      "correctAnswer": 2,
+      "explication": "Une source ponctuelle produit une ombre nette car tous les rayons sont bien définis et ne contournent pas l’objet."
+    },
+    {
+      "question": "Que se passe-t-il à la frontière entre deux milieux de propagation de la lumière ?",
+      "options": ["La lumière s’éteint", "Il n’y a aucun effet", "Elle peut être réfléchie ou réfractée", "Elle se divise en deux rayons égaux"],
+      "correctAnswer": 2,
+      "explication": "Lorsque la lumière passe d’un milieu à un autre, elle peut être partiellement réfléchie et partiellement réfractée."
+    },
+    {
+      "question": "Comment appelle-t-on le point où les rayons réfléchis ou réfractés semblent se croiser ?",
+      "options": ["L’axe principal", "Le foyer", "Le sommet", "Le point d’incidence"],
+      "correctAnswer": 1,
+      "explication": "Le foyer est le point où les rayons convergent ou semblent converger après réflexion ou réfraction."
+    },
+    {
+      "question": "Quel type de miroir est utilisé pour élargir le champ de vision (rétroviseur de voiture) ?",
+      "options": ["Miroir concave", "Miroir plan", "Miroir convexe", "Miroir parabolique"],
+      "correctAnswer": 2,
+      "explication": "Les rétroviseurs extérieurs utilisent des miroirs convexes pour élargir le champ de vision."
+    },
+    {
+      "question": "Quel instrument peut-on utiliser pour observer les images produites par un miroir concave ?",
+      "options": ["Un microscope", "Un écran", "Un thermomètre", "Un voltmètre"],
+      "correctAnswer": 1,
+      "explication": "Un écran permet de visualiser l’image réelle formée par un miroir concave si l’objet est bien placé."
+    }
+  ]
+}
